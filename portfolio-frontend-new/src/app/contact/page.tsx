@@ -38,8 +38,7 @@ export default function ContactPage() {
         setIsSubmitting(true);
         setError(null);
         try {
-            // Note: Backend POST might be protected, but we'll try it as requested
-            await api.post('/Contacts', data);
+            await api.post('/Contacts/message', data);
             setIsSuccess(true);
             reset();
             setTimeout(() => setIsSuccess(false), 5000);

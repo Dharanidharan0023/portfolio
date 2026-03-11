@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using portfolio_backend.Data;
 using portfolio_backend.Models;
+using System.Text.Json;
 
 namespace portfolio_backend.Controllers
 {
@@ -60,7 +61,7 @@ namespace portfolio_backend.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateExperience(int id, Experience experience)
+        public async Task<ActionResult<Experience>> UpdateExperience(int id, Experience experience)
         {
             if (id != experience.Id) return BadRequest();
 
@@ -76,7 +77,8 @@ namespace portfolio_backend.Controllers
                 else throw;
             }
 
-            return NoContent();
+            // ✅ Return updated object instead of NoContent
+            return Ok(experience);
         }
 
         [Authorize(Roles = "Admin")]

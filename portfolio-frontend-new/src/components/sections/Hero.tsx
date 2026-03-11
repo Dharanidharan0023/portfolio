@@ -29,9 +29,9 @@ export function Hero({ name = "Dharanidharan", title = "Full Stack Developer", b
                         transition={{ duration: 0.5 }}
                         className="order-2 lg:order-1"
                     >
-                        <span className="inline-block py-1.5 px-4 rounded-full bg-primary/10 text-primary text-sm font-bold tracking-widest uppercase mb-6 border border-primary/30 shadow-[0_0_20px_#3b82f64d]">
+                        <Link href="/admin" className="inline-block py-1.5 px-4 rounded-full bg-primary/10 text-primary text-sm font-bold tracking-widest uppercase mb-6 border border-primary/30 shadow-[0_0_20px_#3b82f64d] hover:bg-primary/20 transition-colors cursor-pointer">
                             Full Stack Developer
-                        </span>
+                        </Link>
                         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
                             Hi, I&apos;m <br className="hidden md:block" />
                             <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">

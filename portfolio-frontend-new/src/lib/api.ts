@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:5195/api',
+    baseURL: 'http://localhost:5195/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -19,6 +19,21 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Response interceptor to handle global 401 Unauthorized errors
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            console.error('Unauthorized! Token may be missing or expired.');
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('adminToken');
+                window.location.href = '/admin/login';
+            }
+        }
         return Promise.reject(error);
     }
 );

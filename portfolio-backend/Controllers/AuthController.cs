@@ -5,6 +5,7 @@ using portfolio_backend.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace portfolio_backend.Controllers
 {
@@ -28,26 +29,17 @@ namespace portfolio_backend.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == request.Username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            {
                 return Unauthorized(new { message = "Invalid username or password" });
-            }
 
-            // Update LastLogin
             user.LastLogin = DateTime.UtcNow;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            // Handle missing JWT key gracefully
             var jwtKey = _config["Jwt:Key"];
-            if (string.IsNullOrEmpty(jwtKey))
-            {
-                return StatusCode(500, new { message = "JWT Secret Key is not configured." });
-            }
-
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -55,7 +47,7 @@ namespace portfolio_backend.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role ?? "Admin") // Single admin
             };
 
             var token = new JwtSecurityToken(
@@ -63,11 +55,13 @@ namespace portfolio_backend.Controllers
                 audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(24),
-                signingCredentials: credentials);
+                signingCredentials: credentials
+            );
 
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
+                expires = token.ValidTo,
                 user = new { user.Id, user.Username, user.Role }
             });
         }

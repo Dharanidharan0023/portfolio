@@ -1,0 +1,37 @@
+﻿
+> portfolio-frontend-new@0.1.0 dev
+> next dev
+
+Γû▓ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.22.225.235:3000
+
+Γ£ô Starting...
+node.exe : Γ¿» Unable 
+to acquire lock at D:\P
+roject\myportfolio\port
+folio-frontend-new\.nex
+t\dev\lock, is another 
+instance of next dev 
+running?
+At line:1 char:1
++ & "C:\nvm4w\nodejs/no
+de.exe" "C:\nvm4w\nodej
+s/node_modules/npm/bin/
+np ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (Γ¿» Unable to   
+  a...xt dev runnin    
+g?:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
+[?25h

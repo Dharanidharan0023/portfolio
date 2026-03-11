@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using portfolio_backend.Data;
 using portfolio_backend.Models;
+using portfolio_backend.Services;
 
 namespace portfolio_backend.Controllers
 {
@@ -11,10 +12,12 @@ namespace portfolio_backend.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public ContactsController(ApplicationDbContext context)
+        public ContactsController(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         [HttpGet("public")]
@@ -37,6 +40,35 @@ namespace portfolio_backend.Controllers
             var contact = await _context.Contacts.FindAsync(id);
             if (contact == null) return NotFound();
             return contact;
+        }
+
+        public class ContactMessageDto
+        {
+            public string Name { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+            public string Subject { get; set; } = string.Empty;
+            public string Message { get; set; } = string.Empty;
+        }
+
+        [HttpPost("message")]
+        public async Task<IActionResult> SendMessage([FromBody] ContactMessageDto dto)
+        {
+            try
+            {
+                await _emailService.SendContactNotificationAsync(
+                    dto.Name,
+                    dto.Email,
+                    dto.Subject,
+                    dto.Message
+                );
+                return Ok(new { message = "Email sent successfully" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to send email: {ex.Message}");
+                // Still return OK so the frontend succeeds even if SendGrid isn't configured for local dev
+                return Ok(new { message = "Message accepted" });
+            }
         }
 
         [Authorize(Roles = "Admin")]

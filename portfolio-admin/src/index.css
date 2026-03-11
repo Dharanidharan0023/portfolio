@@ -2,39 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------- Base Styles ---------------- */
 @layer base {
   body {
     @apply bg-background text-white font-sans antialiased transition-colors duration-300 overflow-x-hidden;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400;
+  }
+
+  p, span, a, li {
+    @apply text-white/90;
   }
 }
 
+/* ---------------- Components ---------------- */
 @layer components {
+  /* Glass Cards */
   .glass-card {
-    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl;
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-glass;
   }
 
   .glass-card-light {
-    @apply bg-white/80 backdrop-blur-md border border-gray-200 rounded-2xl shadow-xl;
+    @apply bg-white/80 backdrop-blur-md border border-gray-200 rounded-2xl shadow-glass;
   }
 
+  .glass-card-premium {
+    @apply bg-gradient-to-br from-white/10 to-white/5 
+           backdrop-blur-2xl border border-white/20 
+           rounded-[2.5rem] shadow-premium;
+  }
+
+  /* Buttons */
   .btn-primary {
-    @apply px-6 py-3 rounded-full bg-gradient-to-r from-primary to-primary-light text-white font-medium hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-primary/25;
+    @apply px-6 py-3 rounded-full bg-gradient-to-r from-primary to-primary-light text-white font-medium 
+           hover:scale-105 active:scale-95 transition-all duration-300 shadow-premium;
   }
 
   .btn-outline {
-    @apply px-6 py-3 rounded-full bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium hover:scale-105 active:scale-95 transition-all duration-300;
+    @apply px-6 py-3 rounded-full bg-transparent border-2 border-primary text-primary font-medium 
+           hover:bg-primary hover:text-white hover:scale-105 active:scale-95 transition-all duration-300;
   }
 }
 
+/* ---------------- Scrollbar (WebKit) ---------------- */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -44,9 +56,22 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary/50 text-xl border-2 border-background;
+  @apply bg-primary/50 border-2 border-background;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-primary;
+}
+
+/* ---------------- Animations ---------------- */
+.animate-blob {
+  @apply animate-blob;
+}
+
+.animate-fade-in {
+  @apply animate-fade-in;
+}
+
+.animate-slide-up {
+  @apply animate-slide-up;
 }
