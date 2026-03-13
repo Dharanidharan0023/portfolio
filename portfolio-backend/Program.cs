@@ -135,7 +135,16 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // ----------------------
-// 8️⃣ Middleware & Error Handling
+// 8️⃣ Auto-migrate database on startup
+// ----------------------
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
+// ----------------------
+// 9️⃣ Middleware & Error Handling
 // ----------------------
 if (app.Environment.IsDevelopment())
 {
