@@ -1,11 +1,6 @@
 services:
   - type: web
     name: portfolio-backend
-    env: dotnet               # Use .NET runtime
-    rootDir: portfolio-backend # Run commands from the backend folder
-    buildCommand: dotnet restore && dotnet build
-    # Option A: run directly (good for development)
-    startCommand: dotnet run --project portfolio-backend/PortfolioBackend.csproj
-    # Option B: publish and run compiled DLL (more production-ready)
-    # buildCommand: dotnet publish -c Release -o out
-    # startCommand: dotnet out/PortfolioBackend.dll
+    env: docker
+    plan: free
+    rootDir: portfolio-backend
