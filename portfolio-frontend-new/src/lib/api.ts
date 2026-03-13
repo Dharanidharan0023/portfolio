@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://backend-port-beryl.vercel.app/api',
+    baseURL: 'https://portfolio-backend-n6fi.onrender.com/api',
     headers: {
         'Content-Type': 'application/json',
     },
