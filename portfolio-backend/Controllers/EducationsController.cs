@@ -51,7 +51,7 @@ namespace portfolio_backend.Controllers
             _context.Entry(education).State = EntityState.Modified;
             try { await _context.SaveChangesAsync(); }
             catch (DbUpdateConcurrencyException) { if (!EducationExists(id)) return NotFound(); else throw; }
-            return NoContent();
+            return Ok(education);
         }
 
         // DELETE: api/Educations/5

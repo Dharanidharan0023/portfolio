@@ -17,10 +17,12 @@ namespace portfolio_backend.Services
 
         public async Task SendEmailAsync(string to, string subject, string body)
         {
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-            if (string.IsNullOrEmpty(apiKey))
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY") 
+                         ?? _config["SendGridSettings:ApiKey"];
+                         
+            if (string.IsNullOrEmpty(apiKey) || apiKey == "YOUR_SENDGRID_API_KEY_HERE")
             {
-                _logger.LogError("SendGrid API key is missing. Set the SENDGRID_API_KEY environment variable.");
+                _logger.LogError("SendGrid API key is missing. Set the SENDGRID_API_KEY environment variable or config.");
                 throw new InvalidOperationException("SendGrid API key not configured.");
             }
 

@@ -75,7 +75,7 @@ namespace portfolio_backend.Controllers
                 else throw;
             }
 
-            return NoContent();
+            return Ok(skill);
         }
 
         [Authorize(Roles = "Admin")]

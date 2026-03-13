@@ -1,9 +1,11 @@
     using System.Text;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
     using portfolio_backend.Data;
+    using System.Net;
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -24,18 +26,17 @@
         options.SwaggerDoc("v1", new OpenApiInfo
         {
             Title = "Portfolio API",
-            Version = "v1"
+            Version = "v1",
+            Description = "Backend API for Portfolio Website"
         });
 
-        // JWT Bearer
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-            Description = "Enter JWT token here. Example: Bearer {token}",
+            Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
             Name = "Authorization",
             In = ParameterLocation.Header,
-            Type = SecuritySchemeType.Http,
-            Scheme = "bearer",
-            BearerFormat = "JWT"
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
         });
 
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -47,9 +48,12 @@
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "Bearer"
-                    }
+                    },
+                    Scheme = "oauth2",
+                    Name = "Bearer",
+                    In = ParameterLocation.Header
                 },
-                Array.Empty<string>()
+                new List<string>()
             }
         });
     });
@@ -93,12 +97,10 @@
     {
         options.AddDefaultPolicy(policy =>
         {
-            policy.WithOrigins(
-                    "http://localhost:5173",
-                    "http://127.0.0.1:5173",
-                    "http://localhost:5174",
-                    "http://127.0.0.1:5174",
-                    "http://localhost:3000"
+            policy.SetIsOriginAllowed(origin => 
+                    new Uri(origin).Host == "localhost" || 
+                    origin.EndsWith(".vercel.app") || 
+                    origin.EndsWith(".onrender.com")
                 )
                 .AllowAnyHeader()
                 .AllowAnyMethod()
@@ -112,17 +114,36 @@
     var app = builder.Build();
 
     // ----------------------
-    // 7️⃣ Swagger
+    // 7️⃣ Middleware & Error Handling
     // ----------------------
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+    else
+    {
+        app.UseExceptionHandler(appError =>
+        {
+            appError.Run(async context =>
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new { 
+                    error = "Internal Server Error", 
+                    message = "An unexpected error occurred. Please try again later." 
+                });
+            });
+        });
+        app.UseHsts();
+    }
 
-    // ----------------------
-    // 8️⃣ Middleware
-    // ----------------------
+    // Support for Render/Vercel reverse proxies
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });
+
     app.UseCors();
     app.UseStaticFiles();
 
@@ -135,7 +156,7 @@
     app.UseAuthorization();
 
     // ----------------------
-    // 9️⃣ Map Controllers
+    // 8️⃣ Map Controllers
     // ----------------------
     app.MapControllers();
 

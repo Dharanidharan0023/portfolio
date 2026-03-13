@@ -39,7 +39,7 @@ namespace portfolio_backend.Controllers
             user.LastLogin = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
-            var jwtKey = _config["Jwt:Key"];
+            var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured");
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -47,7 +47,7 @@ namespace portfolio_backend.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role ?? "Admin") // Single admin
+                new Claim(ClaimTypes.Role, user.Role ?? "Admin")
             };
 
             var token = new JwtSecurityToken(
@@ -64,6 +64,32 @@ namespace portfolio_backend.Controllers
                 expires = token.ValidTo,
                 user = new { user.Id, user.Username, user.Role }
             });
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] LoginRequest request)
+        {
+            // Simple protection: only allow if no users exist or with a secret header
+            var anyUser = await _context.Users.AnyAsync();
+            var registrationSecret = Request.Headers["X-Registration-Secret"].ToString();
+            
+            if (anyUser && registrationSecret != _config["Jwt:Key"]) 
+                return BadRequest(new { message = "Registration is closed." });
+
+            if (await _context.Users.AnyAsync(u => u.Username == request.Username))
+                return BadRequest(new { message = "Username already exists." });
+
+            var user = new User
+            {
+                Username = request.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Role = "Admin"
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "User registered successfully" });
         }
     }
 }
