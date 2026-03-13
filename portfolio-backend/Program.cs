@@ -69,8 +69,8 @@ builder.Services.AddSwaggerGen(options =>
 // ----------------------
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Handle Render's "postgres://" URL format
-if (!string.IsNullOrEmpty(connectionString) && connectionString.StartsWith("postgres://"))
+// Handle Render's "postgres://" or "postgresql://" URL format
+if (!string.IsNullOrEmpty(connectionString) && (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
 {
     var databaseUri = new Uri(connectionString);
     var userInfo = databaseUri.UserInfo.Split(':');
