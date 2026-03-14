@@ -72,10 +72,17 @@ var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
 var dbUser = Environment.GetEnvironmentVariable("DB_USER");
 var dbPass = Environment.GetEnvironmentVariable("DB_PASSWORD");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
 string finalConnectionString;
 
-if (!string.IsNullOrEmpty(dbHost) && !string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPass) && !string.IsNullOrEmpty(dbName))
+if (!string.IsNullOrEmpty(databaseUrl) && (databaseUrl.StartsWith("postgres://") || databaseUrl.StartsWith("postgresql://")))
+{
+    var databaseUri = new Uri(databaseUrl);
+    var userInfo = databaseUri.UserInfo.Split(':');
+    finalConnectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Database={databaseUri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+}
+else if (!string.IsNullOrEmpty(dbHost) && !string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPass) && !string.IsNullOrEmpty(dbName))
 {
     finalConnectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPass};SSL Mode=Require;Trust Server Certificate=true";
 }
@@ -83,7 +90,7 @@ else
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-    // Handle Render's "postgres://" or "postgresql://" URL format
+    // Handle standard connection string or fallback string if it happens to be a URL
     if (!string.IsNullOrEmpty(connectionString) && (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
     {
         var databaseUri = new Uri(connectionString);
@@ -179,7 +186,7 @@ using (var scope = app.Services.CreateScope())
 // ----------------------
 // 9️⃣ Middleware & Error Handling
 // ----------------------
-if (app.Environment.IsDevelopment() || true) // Temporarily force development features for debugging 500
+if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
