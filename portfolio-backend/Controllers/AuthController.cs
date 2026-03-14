@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using portfolio_backend.DTOs;
 
 namespace portfolio_backend.Controllers
 {
@@ -22,11 +23,6 @@ namespace portfolio_backend.Controllers
             _config = config;
         }
 
-        public class LoginRequest
-        {
-            public string Username { get; set; } = string.Empty;
-            public string Password { get; set; } = string.Empty;
-        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -73,7 +69,7 @@ namespace portfolio_backend.Controllers
             var anyUser = await _context.Users.AnyAsync();
             var registrationSecret = Request.Headers["X-Registration-Secret"].ToString();
             
-            if (anyUser && registrationSecret != _config["Jwt:Key"]) 
+            if (anyUser && registrationSecret != (_config["Jwt:RegistrationSecret"] ?? _config["Jwt:Key"])) 
                 return BadRequest(new { message = "Registration is closed." });
 
             if (await _context.Users.AnyAsync(u => u.Username == request.Username))
