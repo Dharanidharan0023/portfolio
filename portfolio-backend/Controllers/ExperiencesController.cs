@@ -56,7 +56,7 @@ namespace portfolio_backend.Controllers
             _context.Experiences.Add(experience);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetExperience), new { id = experience.Id }, experience);
+            return CreatedAtAction(nameof(GetPublicExperiences), new { id = experience.Id }, experience);
         }
 
         [Authorize(Roles = "Admin")]

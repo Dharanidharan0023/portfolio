@@ -39,7 +39,7 @@ namespace portfolio_backend.Controllers
         {
             _context.Educations.Add(education);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetEducations), new { id = education.Id }, education);
+            return CreatedAtAction(nameof(GetPublicEducations), new { id = education.Id }, education);
         }
 
         // PUT: api/Educations/5

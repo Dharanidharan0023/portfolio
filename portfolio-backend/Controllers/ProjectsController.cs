@@ -60,7 +60,7 @@ namespace portfolio_backend.Controllers
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProject), new { id = project.Id }, project);
+            return CreatedAtAction(nameof(GetPublicProjects), new { id = project.Id }, project);
         }
 
         [Authorize(Roles = "Admin")]
