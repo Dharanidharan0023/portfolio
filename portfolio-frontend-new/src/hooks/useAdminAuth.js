@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { useRouter, usePathname, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 
 export function useAdminAuth() {
@@ -21,13 +21,13 @@ export function useAdminAuth() {
     const login = (token) => {
         localStorage.setItem('adminToken', token);
         setIsAuthenticated(true);
-        router.push('/'); // Redirect to dashboard after successful login
+        router.push('/admin'); // Redirect to admin dashboard after successful login
     };
 
     const logout = () => {
         localStorage.removeItem('adminToken');
         setIsAuthenticated(false);
-        router.push('/login');
+        router.push('/admin/login');
     };
 
     return { isAuthenticated, isLoading, login, logout };
