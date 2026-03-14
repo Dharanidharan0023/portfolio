@@ -179,8 +179,9 @@ using (var scope = app.Services.CreateScope())
 // ----------------------
 // 9️⃣ Middleware & Error Handling
 // ----------------------
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || true) // Temporarily force development features for debugging 500
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
