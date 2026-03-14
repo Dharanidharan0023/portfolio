@@ -67,18 +67,37 @@ builder.Services.AddSwaggerGen(options =>
 // ----------------------
 // 4️⃣ Database
 // ----------------------
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+var dbPass = Environment.GetEnvironmentVariable("DB_PASSWORD");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME");
 
-// Handle Render's "postgres://" or "postgresql://" URL format
-if (!string.IsNullOrEmpty(connectionString) && (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
+string finalConnectionString;
+
+if (!string.IsNullOrEmpty(dbHost) && !string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbPass) && !string.IsNullOrEmpty(dbName))
 {
-    var databaseUri = new Uri(connectionString);
-    var userInfo = databaseUri.UserInfo.Split(':');
-    connectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Database={databaseUri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    finalConnectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPass};SSL Mode=Require;Trust Server Certificate=true";
+}
+else
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    // Handle Render's "postgres://" or "postgresql://" URL format
+    if (!string.IsNullOrEmpty(connectionString) && (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://")))
+    {
+        var databaseUri = new Uri(connectionString);
+        var userInfo = databaseUri.UserInfo.Split(':');
+        finalConnectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Database={databaseUri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    }
+    else
+    {
+        finalConnectionString = connectionString ?? throw new InvalidOperationException("Database connection string not found.");
+    }
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(finalConnectionString));
 
 // ----------------------
 // 5️⃣ JWT Authentication
@@ -139,8 +158,27 @@ var app = builder.Build();
 // ----------------------
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        app.Logger.LogInformation("Testing database connection...");
+        
+        if (db.Database.CanConnect())
+        {
+            app.Logger.LogInformation("Database connection successful. Running migrations...");
+            db.Database.Migrate();
+            app.Logger.LogInformation("Database migrations completed successfully.");
+        }
+        else
+        {
+            app.Logger.LogError("Database is unreachable. Skipping migrations. Please verify the database server is running and accessible via the specified configuration.");
+        }
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "An error occurred while attempting to connect to the database or running migrations.");
+    }
 }
 
 // ----------------------
