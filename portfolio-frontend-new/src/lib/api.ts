@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://portfolio-backend-n6fi.onrender.com/api',
+    baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-backend-n6fi.onrender.com/api',
     headers: {
         'Content-Type': 'application/json',
     },
