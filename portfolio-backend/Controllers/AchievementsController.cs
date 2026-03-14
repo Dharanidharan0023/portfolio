@@ -59,7 +59,7 @@ namespace portfolio_backend.Controllers
             _context.Achievements.Add(achievement);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetAchievement), new { id = achievement.Id }, achievement);
+            return CreatedAtAction(nameof(GetPublicAchievements), new { id = achievement.Id }, achievement);
         }
 
         [Authorize(Roles = "Admin")]
