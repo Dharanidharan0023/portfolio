@@ -186,7 +186,7 @@ using (var scope = app.Services.CreateScope())
 // ----------------------
 // 9️⃣ Middleware & Error Handling
 // ----------------------
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || true)
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();

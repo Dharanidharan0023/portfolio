@@ -2,5 +2,8 @@ services:
   - type: web
     name: portfolio-backend
     env: docker
-    plan: free
     rootDir: portfolio-backend
+    plan: free
+
+
+    
