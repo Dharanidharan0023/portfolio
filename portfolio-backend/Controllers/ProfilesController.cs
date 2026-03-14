@@ -56,6 +56,20 @@ namespace portfolio_backend.Controllers
             return NoContent();
         }
 
+        // POST: api/Profiles
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
+        {
+            if (await _context.Profiles.AnyAsync()) 
+                return BadRequest("Profile already exists. Use PUT to update.");
+
+            _context.Profiles.Add(profile);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetProfile), new { id = profile.Id }, profile);
+        }
+
         private bool ProfileExists(int id) => _context.Profiles.Any(e => e.Id == id);
     }
 }
