@@ -81,16 +81,16 @@ const ManageAchievements = () => {
                 ) : (
                     achievements.map(ach => (
                         <div key={ach.id} className="glass-card flex flex-col group overflow-hidden">
-                            {ach.imageUrl && (
+                            {ach.badgeUrl && (
                                 <div className="h-40 overflow-hidden relative">
                                     <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors z-10"></div>
-                                    <img src={ach.imageUrl} alt={ach.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                    <img src={ach.badgeUrl} alt={ach.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                 </div>
                             )}
                             <div className="p-6 flex flex-col flex-grow">
                                 <h3 className="text-xl font-bold text-white mb-2">{ach.title}</h3>
                                 <p className="text-sm text-primary mb-3">
-                                    {new Date(ach.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                                    {new Date(ach.dateAchieved).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
                                 </p>
                                 <p className="text-gray-300 flex-grow text-sm">{ach.description}</p>
 

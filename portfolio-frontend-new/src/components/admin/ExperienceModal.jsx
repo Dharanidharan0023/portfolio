@@ -9,7 +9,9 @@ const ExperienceModal = ({ isOpen, onClose, onSave, experience }) => {
         startDate: '',
         endDate: '',
         description: '',
-        isCurrent: false
+        isCurrent: false,
+        order: 0,
+        isVisible: true
     });
 
     useEffect(() => {
@@ -20,7 +22,9 @@ const ExperienceModal = ({ isOpen, onClose, onSave, experience }) => {
                 startDate: experience.startDate ? experience.startDate.split('T')[0] : '',
                 endDate: experience.endDate ? experience.endDate.split('T')[0] : '',
                 description: experience.description || '',
-                isCurrent: experience.isCurrent || false
+                isCurrent: experience.isCurrent || false,
+                order: experience.order || 0,
+                isVisible: experience.isVisible ?? true
             });
         } else {
             setFormData({
@@ -29,7 +33,9 @@ const ExperienceModal = ({ isOpen, onClose, onSave, experience }) => {
                 startDate: '',
                 endDate: '',
                 description: '',
-                isCurrent: false
+                isCurrent: false,
+                order: 0,
+                isVisible: true
             });
         }
     }, [experience, isOpen]);
@@ -39,11 +45,11 @@ const ExperienceModal = ({ isOpen, onClose, onSave, experience }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Sanitize payload for C# backend to prevent 400 Bad Request
+        // Sanitize payload for C# backend
         const payload = {
             ...formData,
-            endDate: formData.isCurrent || !formData.endDate ? null : formData.endDate,
-            startDate: formData.startDate ? formData.startDate : new Date().toISOString()
+            endDate: formData.isCurrent || !formData.endDate ? null : new Date(formData.endDate).toISOString(),
+            startDate: formData.startDate ? new Date(formData.startDate).toISOString() : new Date().toISOString()
         };
 
         onSave(payload);
@@ -118,14 +124,26 @@ const ExperienceModal = ({ isOpen, onClose, onSave, experience }) => {
                         <label htmlFor="isCurrent" className="text-sm font-medium text-gray-300">Currently Working Here</label>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
-                        <textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none h-32"
-                            placeholder="Describe your responsibilities and achievements..."
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Order</label>
+                            <input
+                                type="number"
+                                value={formData.order}
+                                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none"
+                            />
+                        </div>
+                        <div className="flex items-center gap-2 mt-6">
+                            <input
+                                type="checkbox"
+                                id="isVisible"
+                                checked={formData.isVisible}
+                                onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
+                                className="w-4 h-4 accent-primary"
+                            />
+                            <label htmlFor="isVisible" className="text-sm font-medium text-gray-300">Is Visible</label>
+                        </div>
                     </div>
 
                     <div className="flex gap-4 pt-4">

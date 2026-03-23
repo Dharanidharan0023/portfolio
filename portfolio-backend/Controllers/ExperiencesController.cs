@@ -22,7 +22,8 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<IEnumerable<Experience>>> GetPublicExperiences()
         {
             return await _context.Experiences
-                .OrderBy(e => e.OrderIndex)
+                .Where(e => e.IsVisible)
+                .OrderBy(e => e.Order)
                 .ThenByDescending(e => e.StartDate)
                 .ToListAsync();
         }
@@ -31,7 +32,10 @@ namespace portfolio_backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Experience>>> GetExperiences()
         {
-            return await GetPublicExperiences();
+            return await _context.Experiences
+                .OrderBy(e => e.Order)
+                .ThenByDescending(e => e.StartDate)
+                .ToListAsync();
         }
 
         [Authorize(Roles = "Admin")]
@@ -47,10 +51,10 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Experience>> CreateExperience(Experience experience)
         {
-            if (experience.OrderIndex == 0)
+            if (experience.Order == 0)
             {
-                var maxOrder = await _context.Experiences.MaxAsync(e => (int?)e.OrderIndex) ?? 0;
-                experience.OrderIndex = maxOrder + 1;
+                var maxOrder = await _context.Experiences.MaxAsync(e => (int?)e.Order) ?? 0;
+                experience.Order = maxOrder + 1;
             }
 
             _context.Experiences.Add(experience);

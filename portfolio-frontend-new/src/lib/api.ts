@@ -28,7 +28,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            console.error('Unauthorized! Token may be missing or expired.');
+            // Token missing or expired
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('adminToken');
                 window.location.href = '/admin/login';

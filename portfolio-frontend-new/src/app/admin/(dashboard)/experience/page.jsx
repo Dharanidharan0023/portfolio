@@ -39,7 +39,9 @@ const ManageExperience = () => {
             setSelectedExp(null);
         } catch (err) {
             console.error('Failed to save experience', err);
-            alert('Failed to save experience');
+            const errorMsg = err.response?.data?.message || err.response?.data?.title || err.message;
+            const details = err.response?.data?.errors ? JSON.stringify(err.response.data.errors) : '';
+            alert(`Failed to save experience: ${errorMsg}\n${details}`);
         }
     };
 

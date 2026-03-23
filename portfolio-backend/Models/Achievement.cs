@@ -22,8 +22,10 @@ namespace portfolio_backend.Models
         
         public string? Url { get; set; }
 
-        public int OrderIndex { get; set; } = 0;
+        public int Order { get; set; } = 0;
         
         public bool IsFeatured { get; set; } = true;
+
+        public bool IsVisible { get; set; } = true;
     }
 }

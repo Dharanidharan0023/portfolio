@@ -15,7 +15,7 @@ export default function ProjectsPage() {
                 const response = await api.get('/Projects/public');
                 setProjects(response.data);
             } catch (error) {
-                console.error('Error fetching projects:', error);
+                // Handle error silently or with a user-friendly UI
             } finally {
                 setLoading(false);
             }
@@ -36,9 +36,9 @@ export default function ProjectsPage() {
         <div className="py-20 animate-in">
             <Container>
                 <div className="max-w-3xl mb-16">
-                    <h1 className="text-4xl font-extrabold mb-6">Featured Projects</h1>
+                    <h1 className="text-4xl font-extrabold mb-6">All Projects</h1>
                     <p className="text-xl text-muted-foreground">
-                        A selection of my recent work, ranging from web applications to creative digital experiences.
+                        A comprehensive showcase of my work, ranging from web applications to creative digital experiences.
                     </p>
                 </div>
 
@@ -49,7 +49,7 @@ export default function ProjectsPage() {
                             title={project.title}
                             description={project.description}
                             imageUrl={project.thumbnailUrl || project.imageUrl}
-                            liveUrl={project.liveUrl}
+                            liveUrl={project.projectUrl}
                             githubUrl={project.githubUrl}
                             tags={project.technologies?.split(',')}
                             index={index}

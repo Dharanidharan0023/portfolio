@@ -23,7 +23,10 @@ namespace portfolio_backend.Controllers
         [HttpGet("public")]
         public async Task<ActionResult<IEnumerable<Contact>>> GetPublicContacts()
         {
-            return await _context.Contacts.ToListAsync();
+            return await _context.Contacts
+                .Where(c => c.IsVisible)
+                .OrderBy(c => c.Order)
+                .ToListAsync();
         }
 
         [Authorize(Roles = "Admin")]
@@ -136,6 +139,12 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> CreateContact(Contact contact)
         {
+            if (contact.Order == 0)
+            {
+                var maxOrder = await _context.Contacts.MaxAsync(c => (int?)c.Order) ?? 0;
+                contact.Order = maxOrder + 1;
+            }
+
             _context.Contacts.Add(contact);
             await _context.SaveChangesAsync();
 

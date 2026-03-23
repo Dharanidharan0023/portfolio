@@ -69,16 +69,20 @@ export default function AchievementsPage() {
                                 </div>
                             </div>
 
-                            {ach.credentialUrl && (
+                            {ach.url ? (
                                 <a
-                                    href={ach.credentialUrl}
+                                    href={ach.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="mt-4 flex items-center text-sm font-medium text-primary hover:underline gap-1"
                                 >
-                                    Verify Credential
+                                    View Certificate
                                     <ExternalLink className="w-3 h-3" />
                                 </a>
+                            ) : (
+                                <p className="mt-4 flex items-center text-sm font-medium text-muted-foreground gap-1">
+                                    Certificate not available
+                                </p>
                             )}
                         </motion.div>
                     ))}

@@ -21,7 +21,11 @@ namespace portfolio_backend.Controllers
         [HttpGet("public")]
         public async Task<ActionResult<IEnumerable<Education>>> GetPublicEducations()
         {
-            return await _context.Educations.OrderBy(e => e.OrderIndex).ToListAsync();
+            return await _context.Educations
+                .Where(e => e.IsVisible)
+                .OrderBy(e => e.Order)
+                .ThenByDescending(e => e.StartDate)
+                .ToListAsync();
         }
 
         // GET: api/Educations
@@ -29,7 +33,10 @@ namespace portfolio_backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Education>>> GetEducations()
         {
-            return await _context.Educations.OrderBy(e => e.OrderIndex).ToListAsync();
+            return await _context.Educations
+                .OrderBy(e => e.Order)
+                .ThenByDescending(e => e.StartDate)
+                .ToListAsync();
         }
 
         // POST: api/Educations
@@ -37,6 +44,12 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Education>> PostEducation(Education education)
         {
+            if (education.Order == 0)
+            {
+                var maxOrder = await _context.Educations.MaxAsync(e => (int?)e.Order) ?? 0;
+                education.Order = maxOrder + 1;
+            }
+
             _context.Educations.Add(education);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPublicEducations), new { id = education.Id }, education);

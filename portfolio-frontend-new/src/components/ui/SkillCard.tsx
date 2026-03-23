@@ -5,24 +5,27 @@ import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } fr
 
 interface SkillCardProps {
     name: string;
-    percentage: number;
+    percentage?: number;
     icon?: string;
     category?: string;
     index?: number;
 }
 
-export function SkillCard({ name, percentage, icon, category, index = 0 }: SkillCardProps) {
+export function SkillCard({ name, icon, category, index = 0 }: SkillCardProps) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
-    const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+    const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+    const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
 
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+    const shadowX = useTransform(mouseXSpring, [-0.5, 0.5], [20, -20]);
+    const shadowY = useTransform(mouseYSpring, [-0.5, 0.5], [20, -20]);
 
     function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -47,57 +50,58 @@ export function SkillCard({ name, percentage, icon, category, index = 0 }: Skill
 
     return (
         <motion.div
-            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            style={{ 
+                rotateX, 
+                rotateY, 
+                transformStyle: "preserve-3d",
+                boxShadow: useMotionTemplate`
+                    ${shadowX}px ${shadowY}px 40px rgba(0, 0, 0, 0.1),
+                    0 10px 20px rgba(0, 0, 0, 0.05)
+                `
+            }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="group relative h-full w-full rounded-2xl md:rounded-3xl bg-secondary/30 backdrop-blur-xl border border-border/50 hover:border-primary/50 transition-colors duration-500 overflow-hidden cursor-crosshair shadow-lg hover:shadow-xl dark:shadow-none"
+            className="group relative h-48 w-full rounded-3xl bg-secondary/20 backdrop-blur-2xl border border-white/10 hover:border-primary/40 transition-colors duration-500 overflow-hidden cursor-none shadow-2xl"
         >
-            {/* Inner Glow driven by mouse */}
+            {/* Spotlight Effect */}
             <motion.div
                 className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
                 style={{
                     background: useMotionTemplate`
                         radial-gradient(
-                            150px circle at ${mouseX}px ${mouseY}px,
-                            rgba(99,102,241,0.15) 0%,
+                            250px circle at ${mouseX}px ${mouseY}px,
+                            rgba(59, 130, 246, 0.15),
                             transparent 80%
                         )
                     `,
                 }}
             />
 
-            {/* Apple-like Shimmer Layer */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 rotate-12 scale-150 pointer-events-none" />
-
-            <div className="relative z-10 p-5 md:p-6 flex flex-col h-full items-start justify-between min-h-[160px]" style={{ transform: "translateZ(30px)" }}>
-                <div className="flex justify-between w-full items-start gap-4">
-                    {icon && (
-                        <div className="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-2xl bg-background/50 flex items-center justify-center border border-border/50 shadow-inner group-hover:scale-110 transition-transform duration-500 ease-out">
-                            <img src={icon} alt={name} className="w-6 h-6 md:w-7 md:h-7 object-contain drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
-                        </div>
-                    )}
+            <div className="relative z-10 p-8 flex flex-col h-full items-center justify-center text-center space-y-4" style={{ transform: "translateZ(50px)" }}>
+                {icon && (
+                    <div className="w-16 h-16 rounded-2xl bg-background/40 flex items-center justify-center border border-white/5 shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ease-out">
+                        <img 
+                            src={icon} 
+                            alt={name} 
+                            className="w-10 h-10 object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" 
+                        />
+                    </div>
+                )}
+                
+                <div className="space-y-1">
+                    <h3 className="text-xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+                        {name}
+                    </h3>
                     {category && (
-                        <span className="text-[10px] md:text-[11px] uppercase tracking-widest font-semibold text-muted-foreground group-hover:text-primary transition-colors text-right">
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60">
                             {category}
                         </span>
                     )}
                 </div>
-                <div className="mt-6 md:mt-8 w-full">
-                    <h3 className="text-lg md:text-xl font-medium tracking-tight text-foreground group-hover:text-primary transition-colors line-clamp-1">{name}</h3>
-
-                    {/* Minimal Progress Bar */}
-                    <div className="w-full h-1.5 bg-secondary rounded-full mt-3 overflow-hidden relative border border-border/30">
-                        <motion.div
-                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-blue-400 rounded-full"
-                            style={{ width: `${percentage}%` }}
-                            initial={{ x: "-100%" }}
-                            whileInView={{ x: 0 }}
-                            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                        />
-                    </div>
-                </div>
             </div>
+
+            {/* Ambient Border Glow */}
+            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </motion.div>
     );
 }

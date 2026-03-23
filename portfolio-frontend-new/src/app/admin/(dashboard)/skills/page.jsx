@@ -59,8 +59,10 @@ const ManageSkills = () => {
         }
     };
 
-    // Group skills by category
-    const categories = ['Frontend', 'Backend', 'Database', 'Tools', 'Other'];
+    // Group skills by category with explicit required categories
+    const defaultCategories = ['Languages', 'Frontend', 'Backend', 'Database', 'Tools', 'Admin Control'];
+    const dynamicCategories = Array.from(new Set(skills.map(s => s.category).filter(Boolean)));
+    const categories = Array.from(new Set([...defaultCategories, ...dynamicCategories]));
 
     return (
         <div>
@@ -84,33 +86,43 @@ const ManageSkills = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {categories.map(category => {
                         const categorySkills = skills.filter(s => s.category === category);
-                        if (categorySkills.length === 0) return null;
+                        // Only hide dynamic categories if empty, but always show default ones
+                        if (categorySkills.length === 0 && !defaultCategories.includes(category)) return null;
 
                         return (
                             <div key={category} className="glass-card p-6">
                                 <h2 className="text-xl font-bold mb-4 border-b border-white/10 pb-2">{category}</h2>
-                                <div className="space-y-4">
-                                    {categorySkills.map(skill => (
-                                        <div key={skill.id} className="flex items-center justify-between group">
-                                            <div className="flex-grow mr-4">
-                                                <div className="flex justify-between mb-1">
+                                <div className="grid grid-cols-1 gap-3">
+                                    {categorySkills.length > 0 ? (
+                                        categorySkills.map(skill => (
+                                            <div key={skill.id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all group">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                                        <Cpu size={20} />
+                                                    </div>
                                                     <span className="text-gray-200 font-medium">{skill.name}</span>
-                                                    <span className="text-xs text-primary">{skill.proficiencyPercentage}%</span>
                                                 </div>
-                                                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                                                    <div className="bg-primary h-full transition-all duration-1000" style={{ width: `${skill.proficiencyPercentage}%` }}></div>
+                                                <div className="flex gap-2">
+                                                    <button onClick={() => handleEdit(skill)} className="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition-colors">
+                                                        <Edit size={16} />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(skill.id)} className="p-2 text-red-400 hover:bg-red-400/10 rounded-lg transition-colors">
+                                                        <Trash2 size={16} />
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                                <button onClick={() => handleEdit(skill)} className="p-1.5 text-blue-400 hover:bg-blue-400/10 rounded">
-                                                    <Edit size={14} />
-                                                </button>
-                                                <button onClick={() => handleDelete(skill.id)} className="p-1.5 text-red-400 hover:bg-red-400/10 rounded">
-                                                    <Trash2 size={14} />
-                                                </button>
-                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-4 border border-dashed border-white/10 rounded-xl">
+                                            <p className="text-gray-500 text-sm mb-2">No skills in this category</p>
+                                            <button 
+                                                onClick={() => { setSelectedSkill(null); setIsModalOpen(true); }}
+                                                className="text-primary text-xs hover:underline flex items-center gap-1 mx-auto"
+                                            >
+                                                <Plus size={12} /> Add Skill
+                                            </button>
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
                             </div>
                         );

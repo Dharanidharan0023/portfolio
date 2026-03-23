@@ -47,6 +47,11 @@
     --ring: #6366f1;
 
     --radius: 1rem;
+
+    /* Light Theme Gradients */
+    --gradient-1: hsla(253, 100%, 98%, 1);
+    --gradient-2: hsla(225, 100%, 95%, 1);
+    --gradient-3: hsla(339, 100%, 95%, 1);
   }
 
   .dark {
@@ -68,21 +73,27 @@
     --border: #1e293b;
     --input: #1e293b;
     --ring: #818cf8;
+
+    /* Dark Theme Gradients */
+    --gradient-1: hsla(253, 16%, 7%, 1);
+    --gradient-2: hsla(225, 39%, 30%, 1);
+    --gradient-3: hsla(339, 49%, 30%, 1);
   }
 }
 
 @layer base {
   * {
     border-color: var(--border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-feature-settings: "rlig" 1, "calt" 1;
-    background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                      radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                      radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+    background-image: radial-gradient(at 0% 0%, var(--gradient-1) 0, transparent 50%), 
+                      radial-gradient(at 50% 0%, var(--gradient-2) 0, transparent 50%), 
+                      radial-gradient(at 100% 0%, var(--gradient-3) 0, transparent 50%);
     background-attachment: fixed;
   }
 }

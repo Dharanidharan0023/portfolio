@@ -10,8 +10,8 @@ const AchievementModal = ({ isOpen, onClose, onSave, achievement }) => {
         issuer: '',
         badgeUrl: '',
         url: '',
-        orderIndex: 0,
-        isPublished: true
+        order: 0,
+        isFeatured: true
     });
 
     useEffect(() => {
@@ -23,8 +23,8 @@ const AchievementModal = ({ isOpen, onClose, onSave, achievement }) => {
                 issuer: achievement.issuer || '',
                 badgeUrl: achievement.badgeUrl || '',
                 url: achievement.url || '',
-                orderIndex: achievement.orderIndex || 0,
-                isPublished: achievement.isPublished ?? true
+                order: achievement.order || 0,
+                isFeatured: achievement.isFeatured ?? true
             });
         } else {
             setFormData({
@@ -34,8 +34,8 @@ const AchievementModal = ({ isOpen, onClose, onSave, achievement }) => {
                 issuer: '',
                 badgeUrl: '',
                 url: '',
-                orderIndex: 0,
-                isPublished: true
+                order: 0,
+                isFeatured: true
             });
         }
     }, [achievement, isOpen]);
@@ -44,9 +44,22 @@ const AchievementModal = ({ isOpen, onClose, onSave, achievement }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        let finalUrl = formData.url?.trim() || '';
+        if (finalUrl && !/^https?:\/\//i.test(finalUrl)) {
+            finalUrl = 'https://' + finalUrl;
+        }
+
+        let finalBadgeUrl = formData.badgeUrl?.trim() || '';
+        if (finalBadgeUrl && !/^https?:\/\//i.test(finalBadgeUrl)) {
+            finalBadgeUrl = 'https://' + finalBadgeUrl;
+        }
+
         const payload = {
             ...formData,
             id: achievement?.id,
+            url: finalUrl,
+            badgeUrl: finalBadgeUrl,
             dateAchieved: formData.dateAchieved ? new Date(formData.dateAchieved).toISOString() : new Date().toISOString()
         };
         onSave(payload);
@@ -106,6 +119,7 @@ const AchievementModal = ({ isOpen, onClose, onSave, achievement }) => {
                                 value={formData.badgeUrl}
                                 onChange={(e) => setFormData({ ...formData, badgeUrl: e.target.value })}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none text-white"
+                                placeholder="https://..."
                             />
                         </div>
                         <div>
@@ -115,7 +129,7 @@ const AchievementModal = ({ isOpen, onClose, onSave, achievement }) => {
                                 value={formData.url}
                                 onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none text-white"
-                                placeholder="Link to PDF or credential"
+                                placeholder="https://..."
                             />
                         </div>
                     </div>
@@ -136,20 +150,20 @@ const AchievementModal = ({ isOpen, onClose, onSave, achievement }) => {
                             <label className="block text-sm font-medium text-gray-300 mb-1">Order Index</label>
                             <input
                                 type="number"
-                                value={formData.orderIndex}
-                                onChange={(e) => setFormData({ ...formData, orderIndex: parseInt(e.target.value) || 0 })}
+                                value={formData.order}
+                                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none text-white"
                             />
                         </div>
                         <div className="flex items-center gap-2 mt-6">
                             <input
                                 type="checkbox"
-                                id="isPublished"
-                                checked={formData.isPublished}
-                                onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
+                                id="isFeatured"
+                                checked={formData.isFeatured}
+                                onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
                                 className="w-4 h-4 accent-primary"
                             />
-                            <label htmlFor="isPublished" className="text-sm font-medium text-gray-300">Published</label>
+                            <label htmlFor="isFeatured" className="text-sm font-medium text-gray-300">Featured (Showcase on Landing Page)</label>
                         </div>
                     </div>
 

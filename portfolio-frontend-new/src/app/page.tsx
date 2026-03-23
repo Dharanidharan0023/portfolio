@@ -4,22 +4,26 @@ import * as React from 'react';
 import { Hero } from '@/components/sections/Hero';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
+import { ProjectCard } from '@/components/ui/ProjectCard';
 import api from '@/lib/api';
 
 export default function Home() {
   const [profile, setProfile] = React.useState<any>(null);
   const [about, setAbout] = React.useState<any>(null);
+  const [featuredProjects, setFeaturedProjects] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, aboutRes] = await Promise.all([
+        const [profileRes, aboutRes, projectsRes] = await Promise.all([
           api.get('/Profiles/public'),
-          api.get('/Abouts/public')
+          api.get('/Abouts/public'),
+          api.get('/Projects/public')
         ]);
         setProfile(profileRes.data);
         setAbout(aboutRes.data);
+        setFeaturedProjects(projectsRes.data.filter((p: any) => p.isFeatured));
       } catch (error) {
         console.error('Error fetching home data:', error);
       } finally {
@@ -80,6 +84,55 @@ export default function Home() {
           </div>
         </Container>
       </section>
+
+      {/* Featured Projects Section */}
+      {featuredProjects.length > 0 && (
+        <section id="featured-projects" className="py-20 relative overflow-hidden">
+          <Container>
+            <div className="max-w-4xl mx-auto text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7 }}
+              >
+                <div className="inline-flex items-center justify-center gap-2 mb-6">
+                  <span className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold tracking-widest uppercase border border-primary/20">
+                    Selected Work
+                  </span>
+                </div>
+                <h3 className="text-4xl md:text-5xl font-extrabold mb-8 tracking-tight">
+                  Featured Projects
+                </h3>
+                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                  A highlight of some of my best and most complete works.
+                </p>
+              </motion.div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredProjects.map((project, index) => (
+                  <ProjectCard
+                      key={project.id}
+                      title={project.title}
+                      description={project.description}
+                      imageUrl={project.thumbnailUrl || project.imageUrl}
+                      liveUrl={project.projectUrl}
+                      githubUrl={project.githubUrl}
+                      tags={project.technologies?.split(',')}
+                      index={index}
+                  />
+              ))}
+            </div>
+            
+            <div className="text-center mt-12">
+               <a href="/projects" className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-secondary text-foreground hover:bg-secondary/80 border border-border transition-colors font-semibold">
+                   View All Projects
+               </a>
+            </div>
+          </Container>
+        </section>
+      )}
 
       {/* Add dark theme specific gradient overlays */}
       <div className="fixed inset-0 pointer-events-none z-[-1] dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-background dark:via-background dark:to-black opacity-80" />

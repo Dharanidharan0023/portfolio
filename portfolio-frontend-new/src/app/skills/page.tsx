@@ -108,7 +108,6 @@ export default function SkillsPage() {
                             >
                                 <SkillCard
                                     name={skill.name}
-                                    percentage={skill.percentage}
                                     icon={skill.icon}
                                     category={skill.category}
                                     index={index}

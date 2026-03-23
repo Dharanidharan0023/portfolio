@@ -19,6 +19,8 @@ namespace portfolio_backend.Models
         
         public string? IconUrl { get; set; }
         
-        public int OrderIndex { get; set; } = 0;
+        public int Order { get; set; } = 0;
+
+        public bool IsVisible { get; set; } = true;
     }
 }

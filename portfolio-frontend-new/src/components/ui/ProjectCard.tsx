@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Github, ExternalLink, X } from 'lucide-react';
+import { Github, ExternalLink, X, Copy, Check } from 'lucide-react';
 import { Button } from './Button';
 import { DevicePreview } from './DevicePreview';
 import { AnimatePresence } from 'framer-motion';
@@ -19,6 +19,22 @@ interface ProjectCardProps {
 
 export function ProjectCard({ title, description, imageUrl, liveUrl, githubUrl, tags = [], index = 0 }: ProjectCardProps) {
     const [showPreview, setShowPreview] = React.useState(false);
+    const [copied, setCopied] = React.useState(false);
+
+    const handleCopy = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (liveUrl) {
+            navigator.clipboard.writeText(liveUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
+    const handleCardClick = () => {
+        if (liveUrl) {
+            window.open(liveUrl, '_blank', 'noopener,noreferrer');
+        }
+    };
 
     return (
         <>
@@ -27,7 +43,8 @@ export function ProjectCard({ title, description, imageUrl, liveUrl, githubUrl, 
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            className="group relative rounded-2xl md:rounded-3xl overflow-hidden glass border-border/50 hover:border-primary/50 transition-all flex flex-col h-full shadow-lg hover:shadow-xl dark:shadow-none bg-background/50"
+            onClick={handleCardClick}
+            className="group relative rounded-2xl md:rounded-3xl overflow-hidden glass border-border/50 hover:border-primary/50 transition-all flex flex-col h-full shadow-lg hover:shadow-xl dark:shadow-none bg-background/50 cursor-pointer"
         >
             <div className="relative aspect-video overflow-hidden">
                 <img
@@ -38,24 +55,38 @@ export function ProjectCard({ title, description, imageUrl, liveUrl, githubUrl, 
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                     <div className="flex flex-wrap gap-3">
                         {liveUrl && (
-                            <a href={liveUrl} target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" className="gap-2 bg-primary/90 hover:bg-primary">
-                                    <ExternalLink className="w-4 h-4" />
-                                    Live Demo
+                            <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                                <a href={liveUrl} target="_blank" rel="noopener noreferrer">
+                                    <Button size="sm" className="gap-2 bg-primary/90 hover:bg-primary">
+                                        <ExternalLink className="w-4 h-4" />
+                                        Live Demo
+                                    </Button>
+                                </a>
+                                <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="gap-2 bg-background/50 backdrop-blur-md border-border"
+                                    onClick={handleCopy}
+                                >
+                                    {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                    {copied ? 'Copied!' : 'Copy'}
                                 </Button>
-                            </a>
+                            </div>
                         )}
                         <Button 
                             variant="secondary" 
                             size="sm" 
                             className="gap-2"
-                            onClick={() => setShowPreview(true)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowPreview(true);
+                            }}
                         >
                             <ExternalLink className="w-4 h-4" />
                             View Devices
                         </Button>
                         {githubUrl && (
-                            <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+                            <a href={githubUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                 <Button variant="outline" size="sm" className="gap-2 bg-background/50 backdrop-blur-md border-border">
                                     <Github className="w-4 h-4" />
                                     Code

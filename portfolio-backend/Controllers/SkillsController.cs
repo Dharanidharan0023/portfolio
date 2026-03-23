@@ -21,7 +21,8 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<IEnumerable<Skill>>> GetPublicSkills()
         {
             return await _context.Skills
-                .OrderBy(s => s.OrderIndex)
+                .Where(s => s.IsVisible)
+                .OrderBy(s => s.Order)
                 .ToListAsync();
         }
 
@@ -45,10 +46,10 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Skill>> CreateSkill(Skill skill)
         {
-            if (skill.OrderIndex == 0)
+            if (skill.Order == 0)
             {
-                var maxOrder = await _context.Skills.MaxAsync(s => (int?)s.OrderIndex) ?? 0;
-                skill.OrderIndex = maxOrder + 1;
+                var maxOrder = await _context.Skills.MaxAsync(s => (int?)s.Order) ?? 0;
+                skill.Order = maxOrder + 1;
             }
 
             _context.Skills.Add(skill);

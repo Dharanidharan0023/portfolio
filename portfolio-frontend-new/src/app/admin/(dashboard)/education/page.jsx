@@ -38,7 +38,8 @@ const ManageEducation = () => {
             setSelectedEdu(null);
         } catch (err) {
             console.error('Failed to save education', err);
-            alert('Failed to save education');
+            const errorMsg = err.response?.data?.message || err.response?.data?.title || err.message;
+            alert(`Failed to save education: ${errorMsg}`);
         }
     };
 

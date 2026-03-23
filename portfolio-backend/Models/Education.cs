@@ -19,6 +19,8 @@ namespace portfolio_backend.Models
 
         public string? Description { get; set; }
 
-        public int OrderIndex { get; set; }
+        public int Order { get; set; }
+
+        public bool IsVisible { get; set; } = true;
     }
 }

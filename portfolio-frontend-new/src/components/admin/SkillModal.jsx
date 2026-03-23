@@ -3,27 +3,49 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 const SkillModal = ({ isOpen, onClose, onSave, skill }) => {
+    const [existingCategories, setExistingCategories] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
-        category: 'Frontend',
-        proficiencyPercentage: 80,
-        icon: ''
+        category: '',
+        proficiencyLevel: 80,
+        iconUrl: '',
+        order: 0,
+        isVisible: true
     });
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+             try {
+                 const res = await import('@/lib/api').then(m => m.default.get('/skills'));
+                 const cats = Array.from(new Set(res.data.map(s => s.category).filter(Boolean)));
+                 setExistingCategories(cats.length > 0 ? cats : ['Languages', 'Frontend', 'Backend', 'Database', 'Tools', 'Admin Control', 'Other']);
+             } catch (e) {
+                 setExistingCategories(['Languages', 'Frontend', 'Backend', 'Database', 'Tools', 'Admin Control', 'Other']);
+             }
+        };
+        if (isOpen) {
+             fetchCategories();
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         if (skill) {
             setFormData({
                 name: skill.name || '',
-                category: skill.category || 'Frontend',
-                proficiencyPercentage: skill.proficiencyPercentage || 80,
-                icon: skill.icon || ''
+                category: skill.category || '',
+                proficiencyLevel: skill.proficiencyLevel || 80,
+                iconUrl: skill.iconUrl || '',
+                order: skill.order || 0,
+                isVisible: skill.isVisible ?? true
             });
         } else {
             setFormData({
                 name: '',
-                category: 'Frontend',
-                proficiencyPercentage: 80,
-                icon: ''
+                category: '',
+                proficiencyLevel: 80,
+                iconUrl: '',
+                order: 0,
+                isVisible: true
             });
         }
     }, [skill, isOpen]);
@@ -60,43 +82,57 @@ const SkillModal = ({ isOpen, onClose, onSave, skill }) => {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-1">Category</label>
-                        <select
+                        <input
+                            type="text"
+                            list="category-suggestions"
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none"
-                        >
-                            <option value="Frontend">Frontend</option>
-                            <option value="Backend">Backend</option>
-                            <option value="Database">Database</option>
-                            <option value="Tools">Tools</option>
-                            <option value="Other">Other</option>
-                        </select>
+                            placeholder="Select or type a new category"
+                            required
+                        />
+                        <datalist id="category-suggestions">
+                            {existingCategories.map((cat, idx) => (
+                                <option key={idx} value={cat} />
+                            ))}
+                        </datalist>
                     </div>
 
                     <div>
                         <div className="flex justify-between mb-1">
                             <label className="block text-sm font-medium text-gray-300">Proficiency (%)</label>
-                            <span className="text-primary text-sm font-bold">{formData.proficiencyPercentage}%</span>
+                            <span className="text-primary text-sm font-bold">{formData.proficiencyLevel}%</span>
                         </div>
                         <input
                             type="range"
                             min="0"
                             max="100"
-                            value={formData.proficiencyPercentage}
-                            onChange={(e) => setFormData({ ...formData, proficiencyPercentage: parseInt(e.target.value) })}
+                            value={formData.proficiencyLevel}
+                            onChange={(e) => setFormData({ ...formData, proficiencyLevel: parseInt(e.target.value) })}
                             className="w-full accent-primary h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">Icon (Lucide name or URL)</label>
-                        <input
-                            type="text"
-                            value={formData.icon}
-                            onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none"
-                            placeholder="Code, Database, etc."
-                        />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1">Order</label>
+                            <input
+                                type="number"
+                                value={formData.order}
+                                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:border-primary outline-none"
+                            />
+                        </div>
+                        <div className="flex items-center gap-2 mt-6">
+                            <input
+                                type="checkbox"
+                                id="isVisible"
+                                checked={formData.isVisible}
+                                onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
+                                className="w-4 h-4 accent-primary"
+                            />
+                            <label htmlFor="isVisible" className="text-sm font-medium text-gray-300">Is Visible</label>
+                        </div>
                     </div>
 
                     <div className="flex gap-4 pt-4">

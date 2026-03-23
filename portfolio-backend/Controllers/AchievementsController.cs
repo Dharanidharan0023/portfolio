@@ -21,8 +21,8 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<IEnumerable<Achievement>>> GetPublicAchievements()
         {
             return await _context.Achievements
-                .Where(a => a.IsFeatured)
-                .OrderBy(a => a.OrderIndex)
+                .Where(a => a.IsVisible && a.IsFeatured)
+                .OrderBy(a => a.Order)
                 .ThenByDescending(a => a.DateAchieved)
                 .ToListAsync();
         }
@@ -32,7 +32,7 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<IEnumerable<Achievement>>> GetAchievements()
         {
             return await _context.Achievements
-                .OrderBy(a => a.OrderIndex)
+                .OrderBy(a => a.Order)
                 .ThenByDescending(a => a.DateAchieved)
                 .ToListAsync();
         }
@@ -50,10 +50,10 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Achievement>> CreateAchievement(Achievement achievement)
         {
-            if (achievement.OrderIndex == 0)
+            if (achievement.Order == 0)
             {
-                var maxOrder = await _context.Achievements.MaxAsync(a => (int?)a.OrderIndex) ?? 0;
-                achievement.OrderIndex = maxOrder + 1;
+                var maxOrder = await _context.Achievements.MaxAsync(a => (int?)a.Order) ?? 0;
+                achievement.Order = maxOrder + 1;
             }
 
             _context.Achievements.Add(achievement);
