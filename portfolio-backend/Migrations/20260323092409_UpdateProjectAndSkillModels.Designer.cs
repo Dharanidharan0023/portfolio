@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using portfolio_backend.Data;
@@ -11,9 +12,11 @@ using portfolio_backend.Data;
 namespace portfolio_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260323092409_UpdateProjectAndSkillModels")]
+    partial class UpdateProjectAndSkillModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +64,7 @@ namespace portfolio_backend.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsFeatured")
+                    b.Property<bool>("IsPublished")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Issuer")
@@ -151,44 +154,6 @@ namespace portfolio_backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("portfolio_backend.Models.ContactMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContactMessages");
                 });
 
             modelBuilder.Entity("portfolio_backend.Models.Education", b =>
@@ -325,10 +290,10 @@ namespace portfolio_backend.Migrations
                     b.Property<bool>("IsFeatured")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsVisible")
+                    b.Property<bool>("IsPublished")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("Order")
+                    b.Property<int>("OrderIndex")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProjectUrl")
@@ -381,7 +346,7 @@ namespace portfolio_backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("IconUrl")
+                    b.Property<string>("Icon")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -392,7 +357,7 @@ namespace portfolio_backend.Migrations
                     b.Property<int>("OrderIndex")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProficiencyLevel")
+                    b.Property<int>("ProficiencyPercentage")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

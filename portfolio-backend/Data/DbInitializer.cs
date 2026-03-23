@@ -88,8 +88,9 @@ namespace portfolio_backend.Data
                         ImageUrl = "https://via.placeholder.com/600x400?text=Service+Booking+App",
                         GithubUrl = "https://github.com/Dharanidharan0023",
                         TechStack = "Spring Boot, React, PostgreSQL",
-                        OrderIndex = 1,
-                        IsPublished = true
+                        Order = 1,
+                        IsVisible = true,
+                        IsFeatured = true
                     },
                     new Project
                     {
@@ -98,8 +99,9 @@ namespace portfolio_backend.Data
                         ImageUrl = "https://via.placeholder.com/600x400?text=MultiMart",
                         GithubUrl = "https://github.com/Dharanidharan0023",
                         TechStack = "React, .NET Core, SQL",
-                        OrderIndex = 2,
-                        IsPublished = true
+                        Order = 2,
+                        IsVisible = true,
+                        IsFeatured = true
                     }
                 );
                 Console.WriteLine("Seeded projects.");

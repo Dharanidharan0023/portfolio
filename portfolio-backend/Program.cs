@@ -173,6 +173,22 @@ using (var scope = app.Services.CreateScope())
             app.Logger.LogInformation("Database connection successful. Running migrations...");
             db.Database.Migrate();
             app.Logger.LogInformation("Database migrations completed successfully.");
+
+            // Seed Admin User
+            if (!db.Users.Any())
+            {
+                app.Logger.LogInformation("No users found. Seeding default admin user...");
+                var adminUser = new portfolio_backend.Models.User
+                {
+                    Username = "admin",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                    Role = "Admin",
+                    CreatedAt = DateTime.UtcNow
+                };
+                db.Users.Add(adminUser);
+                db.SaveChanges();
+                app.Logger.LogInformation("Default admin user created successfully.");
+            }
         }
         else
         {

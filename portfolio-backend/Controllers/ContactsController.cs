@@ -55,20 +55,81 @@ namespace portfolio_backend.Controllers
         {
             try
             {
-                await _emailService.SendContactNotificationAsync(
-                    dto.Name,
-                    dto.Email,
-                    dto.Subject,
-                    dto.Message
-                );
-                return Ok(new { message = "Email sent successfully" });
+                // Save to Database
+                var message = new ContactMessage
+                {
+                    Name = dto.Name,
+                    Email = dto.Email,
+                    Subject = dto.Subject,
+                    Message = dto.Message,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _context.ContactMessages.Add(message);
+                await _context.SaveChangesAsync();
+
+                // Attempt to send email notification
+                try
+                {
+                    await _emailService.SendContactNotificationAsync(
+                        dto.Name,
+                        dto.Email,
+                        dto.Subject,
+                        dto.Message
+                    );
+                }
+                catch (Exception emailEx)
+                {
+                    Console.WriteLine($"Failed to send email notification: {emailEx.Message}");
+                    // Still return success since it's saved to the database
+                }
+
+                return Ok(new { message = "Message received and stored successfully" });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to send email: {ex.Message}");
-                // Still return OK so the frontend succeeds even if SendGrid isn't configured for local dev
-                return Ok(new { message = "Message accepted" });
+                Console.WriteLine($"Failed to process message: {ex.Message}");
+                return StatusCode(500, "Internal server error while processing message");
             }
+        }
+
+        // --- Inbox Endpoints (Admin Only) ---
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("messages")]
+        public async Task<ActionResult<IEnumerable<ContactMessage>>> GetMessages()
+        {
+            return await _context.ContactMessages
+                .OrderByDescending(m => m.CreatedAt)
+                .ToListAsync();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("messages/{id}")]
+        public async Task<ActionResult<ContactMessage>> GetMessage(int id)
+        {
+            var message = await _context.ContactMessages.FindAsync(id);
+            if (message == null) return NotFound();
+
+            if (!message.IsRead)
+            {
+                message.IsRead = true;
+                await _context.SaveChangesAsync();
+            }
+
+            return message;
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("messages/{id}")]
+        public async Task<IActionResult> DeleteMessage(int id)
+        {
+            var message = await _context.ContactMessages.FindAsync(id);
+            if (message == null) return NotFound();
+
+            _context.ContactMessages.Remove(message);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         [Authorize(Roles = "Admin")]

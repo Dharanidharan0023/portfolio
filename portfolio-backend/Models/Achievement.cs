@@ -24,6 +24,6 @@ namespace portfolio_backend.Models
 
         public int OrderIndex { get; set; } = 0;
         
-        public bool IsPublished { get; set; } = true;
+        public bool IsFeatured { get; set; } = true;
     }
 }

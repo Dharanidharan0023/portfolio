@@ -21,8 +21,8 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<IEnumerable<Project>>> GetPublicProjects()
         {
             return await _context.Projects
-                .Where(p => p.IsPublished)
-                .OrderBy(p => p.OrderIndex)
+                .Where(p => p.IsVisible)
+                .OrderByDescending(p => p.Order)
                 .ThenByDescending(p => p.CreatedAt)
                 .ToListAsync();
         }
@@ -32,7 +32,7 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
             return await _context.Projects
-                .OrderBy(p => p.OrderIndex)
+                .OrderByDescending(p => p.Order)
                 .ThenByDescending(p => p.CreatedAt)
                 .ToListAsync();
         }
@@ -51,10 +51,10 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<Project>> CreateProject(Project project)
         {
             project.CreatedAt = DateTime.UtcNow;
-            if (project.OrderIndex == 0)
+            if (project.Order == 0)
             {
-                var maxOrder = await _context.Projects.MaxAsync(p => (int?)p.OrderIndex) ?? 0;
-                project.OrderIndex = maxOrder + 1;
+                var maxOrder = await _context.Projects.MaxAsync(p => (int?)p.Order) ?? 0;
+                project.Order = maxOrder + 1;
             }
 
             _context.Projects.Add(project);
@@ -82,6 +82,32 @@ namespace portfolio_backend.Controllers
             }
 
             return Ok(project);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/toggle-visibility")]
+        public async Task<IActionResult> ToggleVisibility(int id)
+        {
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null) return NotFound();
+
+            project.IsVisible = !project.IsVisible;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { project.Id, project.IsVisible });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/order")]
+        public async Task<IActionResult> UpdateOrder(int id, [FromBody] int order)
+        {
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null) return NotFound();
+
+            project.Order = order;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { project.Id, project.Order });
         }
 
         [Authorize(Roles = "Admin")]

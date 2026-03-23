@@ -21,9 +21,11 @@ namespace portfolio_backend.Models
 
         public string? TechStack { get; set; }
         
-        public int OrderIndex { get; set; } = 0;
+        public int Order { get; set; } = 0;
         
-        public bool IsPublished { get; set; } = true;
+        public bool IsVisible { get; set; } = true;
+        
+        public bool IsFeatured { get; set; } = true;
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
