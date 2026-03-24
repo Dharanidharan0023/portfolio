@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ----------------------
 // 1️⃣ Configure Web Host for Render/Vercel
 // ----------------------
-var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5195";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // ----------------------
@@ -189,6 +189,11 @@ using (var scope = app.Services.CreateScope())
                 db.SaveChanges();
                 app.Logger.LogInformation("Default admin user created successfully.");
             }
+
+            // Seed other data
+            app.Logger.LogInformation("Seeding database data...");
+            DbInitializer.Initialize(db);
+            app.Logger.LogInformation("Database seeding completed.");
         }
         else
         {

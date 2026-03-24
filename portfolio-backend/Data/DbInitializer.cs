@@ -1,5 +1,6 @@
 using portfolio_backend.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace portfolio_backend.Data
@@ -60,22 +61,33 @@ namespace portfolio_backend.Data
             }
 
             // Seed Skills
-            if (!context.Skills.Any())
+            var skillsToSeed = new List<Skill>
             {
-                context.Skills.AddRange(
-                    new Skill { Name = "Java", Category = "Languages", ProficiencyLevel = 90, Order = 1 },
-                    new Skill { Name = "SQL", Category = "Languages", ProficiencyLevel = 85, Order = 2 },
-                    new Skill { Name = "React.js", Category = "Frontend", ProficiencyLevel = 90, Order = 3 },
-                    new Skill { Name = "HTML & CSS", Category = "Frontend", ProficiencyLevel = 95, Order = 4 },
-                    new Skill { Name = "Spring Boot", Category = "Backend", ProficiencyLevel = 85, Order = 5 },
-                    new Skill { Name = ".NET Core", Category = "Backend", ProficiencyLevel = 80, Order = 6 },
-                    new Skill { Name = "MySQL", Category = "Database", ProficiencyLevel = 85, Order = 7 },
-                    new Skill { Name = "PostgreSQL", Category = "Database", ProficiencyLevel = 80, Order = 8 },
-                    new Skill { Name = "GitHub", Category = "Tools", ProficiencyLevel = 90, Order = 9 },
-                    new Skill { Name = "Postman", Category = "Tools", ProficiencyLevel = 85, Order = 10 }
-                );
-                Console.WriteLine("Seeded skills.");
+                new Skill { Name = "Java", Category = "Languages", ProficiencyLevel = 90, Order = 1 },
+                new Skill { Name = "SQL", Category = "Languages", ProficiencyLevel = 85, Order = 2 },
+                new Skill { Name = "React.js", Category = "Frontend", ProficiencyLevel = 90, Order = 3 },
+                new Skill { Name = "HTML & CSS", Category = "Frontend", ProficiencyLevel = 95, Order = 4 },
+                new Skill { Name = "Tailwind CSS", Category = "Frontend", ProficiencyLevel = 90, Order = 5 },
+                new Skill { Name = "Next.js", Category = "Frontend", ProficiencyLevel = 85, Order = 6 },
+                new Skill { Name = "Spring Boot", Category = "Backend", ProficiencyLevel = 85, Order = 7 },
+                new Skill { Name = ".NET Core", Category = "Backend", ProficiencyLevel = 80, Order = 8 },
+                new Skill { Name = "MySQL", Category = "Database", ProficiencyLevel = 85, Order = 9 },
+                new Skill { Name = "PostgreSQL", Category = "Database", ProficiencyLevel = 80, Order = 10 },
+                new Skill { Name = "MongoDB", Category = "Database", ProficiencyLevel = 75, Order = 11 },
+                new Skill { Name = "Redis", Category = "Database", ProficiencyLevel = 70, Order = 12 },
+                new Skill { Name = "GitHub", Category = "Tools", ProficiencyLevel = 90, Order = 13 },
+                new Skill { Name = "Postman", Category = "Tools", ProficiencyLevel = 85, Order = 14 }
+            };
+
+            foreach (var skill in skillsToSeed)
+            {
+                if (!context.Skills.Any(s => s.Name == skill.Name))
+                {
+                    context.Skills.Add(skill);
+                }
             }
+            context.SaveChanges();
+            Console.WriteLine("Seeded skills.");
 
             // Seed Projects
             if (!context.Projects.Any())
