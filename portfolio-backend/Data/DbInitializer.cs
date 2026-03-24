@@ -63,16 +63,16 @@ namespace portfolio_backend.Data
             if (!context.Skills.Any())
             {
                 context.Skills.AddRange(
-                    new Skill { Name = "Java", Category = "Languages", ProficiencyLevel = 90, OrderIndex = 1 },
-                    new Skill { Name = "SQL", Category = "Languages", ProficiencyLevel = 85, OrderIndex = 2 },
-                    new Skill { Name = "React.js", Category = "Frontend", ProficiencyLevel = 90, OrderIndex = 3 },
-                    new Skill { Name = "HTML & CSS", Category = "Frontend", ProficiencyLevel = 95, OrderIndex = 4 },
-                    new Skill { Name = "Spring Boot", Category = "Backend", ProficiencyLevel = 85, OrderIndex = 5 },
-                    new Skill { Name = ".NET Core", Category = "Backend", ProficiencyLevel = 80, OrderIndex = 6 },
-                    new Skill { Name = "MySQL", Category = "Database", ProficiencyLevel = 85, OrderIndex = 7 },
-                    new Skill { Name = "PostgreSQL", Category = "Database", ProficiencyLevel = 80, OrderIndex = 8 },
-                    new Skill { Name = "GitHub", Category = "Tools", ProficiencyLevel = 90, OrderIndex = 9 },
-                    new Skill { Name = "Postman", Category = "Tools", ProficiencyLevel = 85, OrderIndex = 10 }
+                    new Skill { Name = "Java", Category = "Languages", ProficiencyLevel = 90, Order = 1 },
+                    new Skill { Name = "SQL", Category = "Languages", ProficiencyLevel = 85, Order = 2 },
+                    new Skill { Name = "React.js", Category = "Frontend", ProficiencyLevel = 90, Order = 3 },
+                    new Skill { Name = "HTML & CSS", Category = "Frontend", ProficiencyLevel = 95, Order = 4 },
+                    new Skill { Name = "Spring Boot", Category = "Backend", ProficiencyLevel = 85, Order = 5 },
+                    new Skill { Name = ".NET Core", Category = "Backend", ProficiencyLevel = 80, Order = 6 },
+                    new Skill { Name = "MySQL", Category = "Database", ProficiencyLevel = 85, Order = 7 },
+                    new Skill { Name = "PostgreSQL", Category = "Database", ProficiencyLevel = 80, Order = 8 },
+                    new Skill { Name = "GitHub", Category = "Tools", ProficiencyLevel = 90, Order = 9 },
+                    new Skill { Name = "Postman", Category = "Tools", ProficiencyLevel = 85, Order = 10 }
                 );
                 Console.WriteLine("Seeded skills.");
             }
@@ -119,7 +119,7 @@ namespace portfolio_backend.Data
                         EndDate = new DateTime(2025, 8, 31, 0, 0, 0, DateTimeKind.Utc),
                         IsCurrent = false,
                         Description = "- Developed full-stack web applications using .NET Core, React.js, and SQL\n- Built and consumed REST APIs\n- Optimized database queries\n- Improved application performance",
-                        OrderIndex = 1
+                        Order = 1
                     }
                 );
                 Console.WriteLine("Seeded experience.");
@@ -135,7 +135,7 @@ namespace portfolio_backend.Data
                     StartDate = new DateTime(2022, 11, 1, 0, 0, 0, DateTimeKind.Utc),
                     EndDate = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc),
                     Description = "Focused on building a strong foundation in information systems and full stack development.",
-                    OrderIndex = 1
+                    Order = 1
                 });
                 Console.WriteLine("Seeded education.");
             }
@@ -151,7 +151,7 @@ namespace portfolio_backend.Data
                         DateAchieved = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                         Description = "- National-level innovation challenge\n- Prototype-based solution under time constraints\n- High-pressure team collaboration",
                         Url = "#", // Placeholder for certificate
-                        OrderIndex = 1
+                        Order = 1
                     },
                     new Achievement
                     {
@@ -160,7 +160,7 @@ namespace portfolio_backend.Data
                         DateAchieved = new DateTime(2024, 12, 1, 0, 0, 0, DateTimeKind.Utc),
                         Description = "Secured runner-up position in Spring Boot development and earned an internship opportunity.",
                         Url = "#",
-                        OrderIndex = 2
+                        Order = 2
                     }
                 );
                 Console.WriteLine("Seeded achievements.");
@@ -170,9 +170,9 @@ namespace portfolio_backend.Data
             if (!context.Contacts.Any())
             {
                 context.Contacts.AddRange(
-                    new Contact { Type = "Email", Value = "ksdharanidharan2005@gmail.com", Label = "Professional", OrderIndex = 1 },
-                    new Contact { Type = "GitHub", Value = "https://github.com/Dharanidharan0023", Label = "Code", OrderIndex = 2 },
-                    new Contact { Type = "LinkedIn", Value = "https://linkedin.com/in/dharanidharan-k0023", Label = "Connect", OrderIndex = 3 }
+                    new Contact { Type = "Email", Value = "ksdharanidharan2005@gmail.com", Label = "Professional", Order = 1 },
+                    new Contact { Type = "GitHub", Value = "https://github.com/Dharanidharan0023", Label = "Code", Order = 2 },
+                    new Contact { Type = "LinkedIn", Value = "https://linkedin.com/in/dharanidharan-k0023", Label = "Connect", Order = 3 }
                 );
             }
 
