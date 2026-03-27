@@ -2,10 +2,8 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Github, ExternalLink, X, Copy, Check } from 'lucide-react';
+import { Github, ExternalLink, Copy, Check } from 'lucide-react';
 import { Button } from './Button';
-import { DevicePreview } from './DevicePreview';
-import { AnimatePresence } from 'framer-motion';
 
 interface ProjectCardProps {
     title: string;
@@ -18,7 +16,6 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ title, description, imageUrl, liveUrl, githubUrl, tags = [], index = 0 }: ProjectCardProps) {
-    const [showPreview, setShowPreview] = React.useState(false);
     const [copied, setCopied] = React.useState(false);
 
     const handleCopy = (e: React.MouseEvent) => {
@@ -37,7 +34,6 @@ export function ProjectCard({ title, description, imageUrl, liveUrl, githubUrl, 
     };
 
     return (
-        <>
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -73,18 +69,6 @@ export function ProjectCard({ title, description, imageUrl, liveUrl, githubUrl, 
                                 </Button>
                             </div>
                         )}
-                        <Button 
-                            variant="secondary" 
-                            size="sm" 
-                            className="gap-2"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setShowPreview(true);
-                            }}
-                        >
-                            <ExternalLink className="w-4 h-4" />
-                            View Devices
-                        </Button>
                         {githubUrl && (
                             <a href={githubUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                 <Button variant="outline" size="sm" className="gap-2 bg-background/50 backdrop-blur-md border-border">
@@ -111,54 +95,5 @@ export function ProjectCard({ title, description, imageUrl, liveUrl, githubUrl, 
                 </p>
             </div>
         </motion.div>
-
-        {/* Device Preview Modal */}
-        <AnimatePresence>
-            {showPreview && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-                        onClick={() => setShowPreview(false)}
-                    />
-                    
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-surface border border-border rounded-3xl shadow-2xl p-6 md:p-10 flex flex-col no-scrollbar"
-                    >
-                        <div className="flex justify-between items-center mb-8">
-                            <div>
-                                <h2 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
-                                    {title}
-                                </h2>
-                                <p className="text-muted-foreground mt-2">Device Preview</p>
-                            </div>
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="rounded-full w-10 h-10 p-0"
-                                onClick={() => setShowPreview(false)}
-                            >
-                                <X className="w-5 h-5" />
-                                <span className="sr-only">Close</span>
-                            </Button>
-                        </div>
-                        
-                        <div className="flex-1 w-full flex items-center justify-center py-10 bg-black/5 dark:bg-white/5 rounded-2xl border border-border/50">
-                            <DevicePreview 
-                                title={title}
-                                laptopImage={imageUrl || "/api/placeholder/800/450"}
-                                mobileImage={imageUrl || "/api/placeholder/400/800"} 
-                            />
-                        </div>
-                    </motion.div>
-                </div>
-            )}
-        </AnimatePresence>
-        </>
     );
 }
