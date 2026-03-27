@@ -89,10 +89,10 @@ const ManageWorkExperience = () => {
                     ) : (
                         [...experiences]
                             .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
-                            .map((exp, index) => (
+                            .map((exp) => (
                             <div key={exp.id} className="glass-card p-6 flex justify-between items-start group hover:border-primary/30 transition-all relative">
                                 <div className="absolute -left-3 -top-3 w-8 h-8 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold font-mono text-sm shadow-lg backdrop-blur-md">
-                                    {index + 1}
+                                    {exp.order || 0}
                                 </div>
                                 <div className="pl-2">
                                     <div className="flex items-center gap-2 mb-1">

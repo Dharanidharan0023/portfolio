@@ -127,10 +127,10 @@ const ManageCredentials = () => {
                             No education records found.
                         </div>
                     ) : (
-                        [...educations].sort((a, b) => new Date(b.startDate) - new Date(a.startDate)).map((edu, index) => (
+                        [...educations].sort((a, b) => new Date(b.startDate) - new Date(a.startDate)).map((edu) => (
                             <div key={edu.id} className="glass-card p-6 flex justify-between items-start group hover:border-primary/30 transition-all relative">
                                 <div className="absolute -left-3 -top-3 w-8 h-8 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold font-mono text-sm shadow-lg backdrop-blur-md">
-                                    {index + 1}
+                                    {edu.order || 0}
                                 </div>
                                 <div className="pl-2">
                                     <h3 className="text-xl font-bold text-foreground mb-1">{edu.degree}</h3>
@@ -184,10 +184,10 @@ const ManageCredentials = () => {
                                 if (a.order !== b.order) return a.order - b.order;
                                 return new Date(b.dateAchieved) - new Date(a.dateAchieved);
                             })
-                            .map((ach, index) => (
+                            .map((ach) => (
                             <div key={ach.id} className="glass-card flex flex-col group overflow-hidden hover:border-primary/30 transition-all relative">
                                 <div className="absolute left-3 top-3 w-7 h-7 rounded-sm bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold font-mono text-xs shadow-lg backdrop-blur-md">
-                                    #{index + 1}
+                                    #{ach.order || 0}
                                 </div>
                                 <div className="p-6 pt-12 flex flex-col flex-grow">
                                     <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{ach.title}</h3>

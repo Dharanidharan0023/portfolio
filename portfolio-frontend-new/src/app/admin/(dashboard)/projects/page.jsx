@@ -145,9 +145,9 @@ const ManageProjects = () => {
                                 [...projects].sort((a, b) => {
                                     if (a.order !== b.order) return a.order - b.order;
                                     return b.id - a.id; // Newest/Recently updated data first (highest ID = newest)
-                                }).map((project, index) => (
+                                }).map((project) => (
                                     <tr key={project.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                        <td className="p-4 text-center font-mono text-gray-500 font-bold">{index + 1}</td>
+                                        <td className="p-4 text-center font-mono text-gray-500 font-bold">{project.order}</td>
                                         <td className="p-4">{project.title}</td>
                                         <td className="p-4 text-sm text-gray-400">{project.techStack}</td>
                                         <td className="p-4">
