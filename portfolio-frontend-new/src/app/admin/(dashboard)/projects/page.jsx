@@ -122,7 +122,7 @@ const ManageProjects = () => {
                 </button>
             </div>
 
-            <div className="glass-card rounded-xl border border-white/10" style={{ minHeight: '400px' }}>
+            <div className="glass-card !overflow-visible rounded-xl border border-white/10 mb-20" style={{ minHeight: '500px' }}>
                 {loading ? (
                     <div className="p-8 text-center text-gray-400">Loading projects...</div>
                 ) : (
@@ -141,7 +141,7 @@ const ManageProjects = () => {
                                     <td colSpan="4" className="p-8 text-center text-gray-400">No projects found.</td>
                                 </tr>
                             ) : (
-                                [...projects].sort((a, b) => a.order - b.order).map(project => (
+                                [...projects].sort((a, b) => a.order - b.order).map((project, index) => (
                                     <tr key={project.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                                         <td className="p-4">{project.title}</td>
                                         <td className="p-4 text-sm text-gray-400">{project.techStack}</td>
@@ -161,9 +161,9 @@ const ManageProjects = () => {
                                                 >
                                                     <MoreVertical size={16} />
                                                 </button>
-
+ 
                                                 {openDropdownId === project.id && (
-                                                    <div className="absolute right-0 top-full mt-2 w-56 bg-gray-900 border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden">
+                                                    <div className={`absolute right-0 ${index >= projects.length - 3 && projects.length > 3 ? 'bottom-full mb-2' : 'top-full mt-2'} w-56 bg-gray-900 border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden shadow-black/80`}>
                                                         <div className="p-2 border-b border-white/5">
                                                             <div className="text-xs text-gray-400 mb-2 px-2">Order / Priority</div>
                                                             <div className="flex items-center gap-2 px-2">

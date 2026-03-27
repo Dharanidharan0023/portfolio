@@ -9,7 +9,7 @@ import { VisitorTracker } from "@/components/VisitorTracker";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Modern Portfolio | Dharanidharan",
+  title: "Dharanidharan | Portfolio",
   description: "A showcase of my projects, skills, and professional experience.",
 };
 

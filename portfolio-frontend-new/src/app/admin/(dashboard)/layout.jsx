@@ -129,6 +129,8 @@ export default function AdminLayout({ children }) {
                 <main className="flex-grow overflow-y-auto custom-scrollbar p-6 md:p-10 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.03),transparent_40%)]">
                     <div className="max-w-6xl mx-auto animate-in">
                         {children}
+                        {/* Spacer to ensure last-row dropdowns are always scrollable into view */}
+                        <div className="h-48 w-full shrink-0" aria-hidden="true" />
                     </div>
                 </main>
             </div>
