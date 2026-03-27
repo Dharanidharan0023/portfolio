@@ -87,9 +87,14 @@ const ManageWorkExperience = () => {
                             No experience records found.
                         </div>
                     ) : (
-                        experiences.map(exp => (
-                            <div key={exp.id} className="glass-card p-6 flex justify-between items-start group hover:border-primary/30 transition-all">
-                                <div>
+                        [...experiences]
+                            .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+                            .map((exp, index) => (
+                            <div key={exp.id} className="glass-card p-6 flex justify-between items-start group hover:border-primary/30 transition-all relative">
+                                <div className="absolute -left-3 -top-3 w-8 h-8 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center text-primary font-bold font-mono text-sm shadow-lg backdrop-blur-md">
+                                    {index + 1}
+                                </div>
+                                <div className="pl-2">
                                     <div className="flex items-center gap-2 mb-1">
                                         <h3 className="text-xl font-bold text-foreground">{exp.role}</h3>
                                         <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider ${exp.isVisible ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>

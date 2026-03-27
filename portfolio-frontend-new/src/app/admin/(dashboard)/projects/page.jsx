@@ -129,7 +129,8 @@ const ManageProjects = () => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-white/5 border-b border-white/10">
-                                <th className="p-4 font-semibold text-gray-300 rounded-tl-xl">Title</th>
+                                <th className="p-4 font-semibold text-gray-300 w-12 rounded-tl-xl w-16 text-center">#</th>
+                                <th className="p-4 font-semibold text-gray-300">Title</th>
                                 <th className="p-4 font-semibold text-gray-300">Tech Stack</th>
                                 <th className="p-4 font-semibold text-gray-300">Featured</th>
                                 <th className="p-4 font-semibold text-gray-300 text-right rounded-tr-xl">Actions</th>
@@ -138,11 +139,15 @@ const ManageProjects = () => {
                         <tbody ref={dropdownRef}>
                             {projects.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" className="p-8 text-center text-gray-400">No projects found.</td>
+                                    <td colSpan="5" className="p-8 text-center text-gray-400">No projects found.</td>
                                 </tr>
                             ) : (
-                                [...projects].sort((a, b) => a.order - b.order).map((project, index) => (
+                                [...projects].sort((a, b) => {
+                                    if (a.order !== b.order) return a.order - b.order;
+                                    return b.id - a.id; // Newest/Recently updated data first (highest ID = newest)
+                                }).map((project, index) => (
                                     <tr key={project.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td className="p-4 text-center font-mono text-gray-500 font-bold">{index + 1}</td>
                                         <td className="p-4">{project.title}</td>
                                         <td className="p-4 text-sm text-gray-400">{project.techStack}</td>
                                         <td className="p-4">
