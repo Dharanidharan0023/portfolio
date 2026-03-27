@@ -48,10 +48,15 @@
 
     --radius: 1rem;
 
-    /* Light Theme Gradients */
     --gradient-1: hsla(253, 100%, 98%, 1);
     --gradient-2: hsla(225, 100%, 95%, 1);
     --gradient-3: hsla(339, 100%, 95%, 1);
+
+    /* Light Theme Glass Effects */
+    --glass-bg: rgba(255, 255, 255, 0.4);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --scrollbar-thumb: rgba(0, 0, 0, 0.1);
   }
 
   .dark {
@@ -74,17 +79,21 @@
     --input: #1e293b;
     --ring: #818cf8;
 
-    /* Dark Theme Gradients */
     --gradient-1: hsla(253, 16%, 7%, 1);
     --gradient-2: hsla(225, 39%, 30%, 1);
     --gradient-3: hsla(339, 49%, 30%, 1);
+
+    /* Dark Theme Glass Effects */
+    --glass-bg: rgba(15, 23, 42, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.1);
   }
 }
 
 @layer base {
   * {
     border-color: var(--border);
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 
   body {
@@ -98,17 +107,47 @@
   }
 }
 
+/* --- Premium UI Components --- */
+
+/* Glass Effect Utility */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
-.dark .glass {
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.glass-card {
+  @apply rounded-2xl overflow-hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb);
+  opacity: 0.8;
 }
 
 .premium-gradient {
@@ -124,7 +163,6 @@
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);

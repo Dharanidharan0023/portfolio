@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: portfolio-backend
-    env: docker
-    rootDir: portfolio-backend
-    plan: free
-
-
-    

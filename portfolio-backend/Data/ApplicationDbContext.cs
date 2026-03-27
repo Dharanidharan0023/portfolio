@@ -19,6 +19,7 @@ namespace portfolio_backend.Data
         public DbSet<Setting> Settings { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<Visitor> Visitors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

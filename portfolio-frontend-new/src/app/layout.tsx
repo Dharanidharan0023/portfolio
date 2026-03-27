@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { VisitorTracker } from "@/components/VisitorTracker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +27,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative min-h-screen flex flex-col">
+          <div className="relative min-h-screen flex flex-col font-sans">
+            <VisitorTracker />
             <Navbar />
             <main className="flex-1 pt-16">
               {children}
