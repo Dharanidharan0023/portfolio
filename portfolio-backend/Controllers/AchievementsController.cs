@@ -21,7 +21,7 @@ namespace portfolio_backend.Controllers
         public async Task<ActionResult<IEnumerable<Achievement>>> GetPublicAchievements()
         {
             return await _context.Achievements
-                .Where(a => a.IsVisible && a.IsFeatured)
+                .Where(a => a.IsVisible)
                 .OrderBy(a => a.Order)
                 .ThenByDescending(a => a.DateAchieved)
                 .ToListAsync();

@@ -13,7 +13,7 @@ export default function ExperiencePage() {
     React.useEffect(() => {
         const fetchExperiences = async () => {
             try {
-                const response = await api.get('/Experiences/public');
+                const response = await api.get('/experiences/public');
                 setExperiences(response.data);
             } catch (error) {
                 console.error('Error fetching experiences:', error);

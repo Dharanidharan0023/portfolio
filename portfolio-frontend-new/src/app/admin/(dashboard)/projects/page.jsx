@@ -93,11 +93,19 @@ const ManageProjects = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this project?')) {
             try {
-                await api.delete(`/projects/${id}`);
+                console.log(`Attempting to delete project with ID: ${id}`);
+                const res = await api.delete(`/projects/${id}`);
+                console.log('Delete response:', res.status);
                 setProjects(projects.filter(p => p.id !== id));
             } catch (err) {
-                console.error('Failed to delete', err);
-                alert('Failed to delete project');
+                console.error('Project deletion failed:', {
+                    id,
+                    status: err.response?.status,
+                    data: err.response?.data,
+                    message: err.message
+                });
+                const errorMsg = err.response?.data?.message || err.response?.data?.title || 'Check console for details';
+                alert(`Failed to delete project: ${errorMsg}`);
             }
         }
     };

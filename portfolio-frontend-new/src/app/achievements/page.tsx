@@ -15,8 +15,8 @@ export default function AchievementsPage() {
         const fetchAllData = async () => {
             try {
                 const [achResponse, eduResponse] = await Promise.all([
-                    api.get('/Achievements/public'),
-                    api.get('/Educations/public')
+                    api.get('/achievements/public'),
+                    api.get('/educations/public')
                 ]);
                 setAchievements(achResponse.data);
                 setEducations(eduResponse.data);

@@ -19,6 +19,7 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // 2️⃣ Add Services
 // ----------------------
 builder.Services.AddControllers();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 
 // Register Email Service
@@ -148,7 +149,8 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .WithExposedHeaders("Content-Disposition"); // For file downloads if added later
     });
 });
 
