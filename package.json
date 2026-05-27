@@ -1,0 +1,13 @@
+{
+  "name": "myportfolio-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "npm run dev --prefix portfolio-frontend",
+    "dev:backend": "npm run start:dev --prefix portfolio-backend-nestjs",
+    "dev": "npm run dev:frontend",
+    "build:frontend": "npm run build --prefix portfolio-frontend",
+    "build:backend": "npm run build --prefix portfolio-backend-nestjs",
+    "build": "npm run build:frontend"
+  }
+}

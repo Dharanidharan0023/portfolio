@@ -2,19 +2,19 @@
 
 This guide provides instructions for deploying the React Frontend and .NET Core Web API Backend.
 
-## 1. Frontend Deployment (Vercel / Netlify)
+## 1. Frontend Deployment (Vercel)
 
-The React frontend is built using Vite, making it extremely easy to deploy on modern edge networks.
+The React frontend is built using Next.js, making it extremely easy to deploy on Vercel or other Next.js-compatible hosts.
 
 1. Create a GitHub repository and push the `portfolio-frontend` folder.
-2. Sign in to Vercel (or Netlify) and import the repository.
+2. Sign in to Vercel and import the repository.
 3. Configuration:
-   - **Framework Preset**: Vite
+   - **Framework Preset**: Next.js
    - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
+   - **Output Directory**: `.next` (automatically detected)
 4. Deploy!
 
-*Note: Ensure you update your `axios.js` base URL from `http://localhost:5000/api` to your production backend URL.*
+*Note: Ensure you configure your environment variables (like base URL) in the Vercel dashboard under Environment Variables.*
 
 ## 2. Backend Deployment (Docker / Azure)
 

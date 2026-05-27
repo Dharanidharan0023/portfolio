@@ -1,0 +1,165 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  passwordHash String
+  role         String    @default("Admin")
+  createdAt    DateTime  @default(now())
+  lastLogin    DateTime?
+
+  @@map("Users")
+}
+
+model Profile {
+  id              Int     @id @default(autoincrement())
+  fullName        String
+  title           String
+  bio             String?
+  avatarUrl       String?
+  resumeUrl       String?
+  leadershipTitle String?
+  leadershipBio   String?
+
+  @@map("Profiles")
+}
+
+model About {
+  id          Int      @id @default(autoincrement())
+  description String?
+  highlights  String?
+  updatedAt   DateTime @updatedAt @default(now())
+
+  @@map("Abouts")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  imageUrl    String?
+  projectUrl  String?
+  githubUrl   String?
+  techStack   String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  isFeatured  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@map("Projects")
+}
+
+model Skill {
+  id               Int     @id @default(autoincrement())
+  name             String
+  category         String  @default("General")
+  proficiencyLevel Int     @default(0)
+  iconUrl          String?
+  order            Int     @default(0)
+  isVisible        Boolean @default(true)
+
+  @@map("Skills")
+}
+
+model Experience {
+  id          Int       @id @default(autoincrement())
+  company     String
+  role        String
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean   @default(false)
+  description String?
+  order       Int       @default(0)
+  isVisible   Boolean   @default(true)
+
+  @@map("Experiences")
+}
+
+model Education {
+  id          Int      @id @default(autoincrement())
+  institution String
+  degree      String
+  startDate   DateTime
+  endDate     DateTime
+  description String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+
+  @@map("Educations")
+}
+
+model Achievement {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String?
+  dateAchieved DateTime
+  issuer       String?
+  badgeUrl     String?
+  url          String?
+  order        Int      @default(0)
+  isFeatured   Boolean  @default(true)
+  isVisible    Boolean  @default(true)
+
+  @@map("Achievements")
+}
+
+model Contact {
+  id        Int     @id @default(autoincrement())
+  type      String
+  value     String
+  label     String?
+  iconUrl   String?
+  order     Int     @default(0)
+  isVisible Boolean @default(true)
+
+  @@map("Contacts")
+}
+
+model Setting {
+  id    Int     @id @default(autoincrement())
+  key   String  @unique
+  value String?
+
+  @@map("Settings")
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  entity    String
+  entityId  Int?
+  userId    Int?
+  timestamp DateTime @default(now())
+  ipAddress String?
+
+  @@map("ActivityLogs")
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+
+  @@map("ContactMessages")
+}
+
+model Visitor {
+  id        Int      @id @default(autoincrement())
+  ipAddress String
+  timestamp DateTime @default(now())
+  userAgent String?
+
+  @@map("Visitors")
+}
