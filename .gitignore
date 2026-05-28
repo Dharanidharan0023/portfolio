@@ -29,3 +29,6 @@ _ReSharper*/
 dotnet_out.txt
 mp/
 out/
+/portfolio-frontend-new/node_modules/
+/portfolio-frontend-new/.next/
+/portfolio-frontend-new/tsconfig.tsbuildinfo
