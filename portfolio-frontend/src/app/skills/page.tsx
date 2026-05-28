@@ -14,7 +14,7 @@ export default function SkillsPage() {
     React.useEffect(() => {
         const fetchSkills = async () => {
             try {
-                const response = await api.get('/Skills/public');
+                const response = await api.get('/skills/public');
                 setSkills(response.data);
             } catch (error) {
                 console.error('Error fetching skills:', error);

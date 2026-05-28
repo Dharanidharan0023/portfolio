@@ -19,16 +19,16 @@ const AdminDashboard = () => {
         const fetchStats = async () => {
             try {
                 const [visitorsRes, projectsRes, messagesRes, expRes, eduRes, skillsRes] = await Promise.all([
-                    api.get('/visitors/stats').catch(() => ({ data: { TotalVisitors: 0 } })),
+                    api.get('/visitors/stats').catch(() => ({ data: { totalVisitors: 0 } })),
                     api.get('/projects').catch(() => ({ data: [] })),
-                    api.get('/messages').catch(() => ({ data: [] })),
+                    api.get('/contacts/messages').catch(() => ({ data: [] })),
                     api.get('/experiences').catch(() => ({ data: [] })),
                     api.get('/educations').catch(() => ({ data: [] })),
                     api.get('/skills').catch(() => ({ data: [] }))
                 ]);
 
                 setStats({
-                    visitors: visitorsRes.data?.TotalVisitors || 0,
+                    visitors: visitorsRes.data?.totalVisitors || visitorsRes.data?.TotalVisitors || 0,
                     projects: projectsRes.data?.length || 0,
                     messages: messagesRes.data?.filter(m => !m.isRead)?.length || 0,
                     experience: expRes.data?.length || 0,

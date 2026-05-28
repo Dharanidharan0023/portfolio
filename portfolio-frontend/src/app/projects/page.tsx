@@ -12,7 +12,7 @@ export default function ProjectsPage() {
     React.useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await api.get('/Projects/public');
+                const response = await api.get('/projects/public');
                 setProjects(response.data);
             } catch (error) {
                 // Handle error silently or with a user-friendly UI
@@ -51,7 +51,7 @@ export default function ProjectsPage() {
                             imageUrl={project.thumbnailUrl || project.imageUrl}
                             liveUrl={project.projectUrl}
                             githubUrl={project.githubUrl}
-                            tags={project.technologies?.split(',')}
+                            tags={project.techStack?.split(',')}
                             index={index}
                         />
                     ))}

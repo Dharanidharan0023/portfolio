@@ -46,7 +46,13 @@ const ManageProfile = () => {
         setSaving(true);
         setMessage({ type: '', text: '' });
         try {
-            await api.put(`/profiles/${profile.id || 1}`, profile);
+            if (!profile.id) {
+                const { id, ...data } = profile;
+                const res = await api.post('/profiles', data);
+                setProfile(res.data);
+            } else {
+                await api.put(`/profiles/${profile.id}`, profile);
+            }
             setMessage({ type: 'success', text: 'Profile updated successfully!' });
             setTimeout(() => setMessage({ type: '', text: '' }), 3000);
         } catch (err) {

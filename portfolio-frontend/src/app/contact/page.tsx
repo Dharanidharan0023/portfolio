@@ -38,7 +38,7 @@ export default function ContactPage() {
         setIsSubmitting(true);
         setError(null);
         try {
-            await api.post('/Contacts/message', data);
+            await api.post('/contacts/message', data);
             setIsSuccess(true);
             reset();
             setTimeout(() => setIsSuccess(false), 5000);

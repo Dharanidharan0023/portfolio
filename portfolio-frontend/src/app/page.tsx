@@ -17,9 +17,9 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const [profileRes, aboutRes, projectsRes] = await Promise.all([
-          api.get('/Profiles/public'),
-          api.get('/Abouts/public'),
-          api.get('/Projects/public')
+          api.get('/profiles/public'),
+          api.get('/abouts/public'),
+          api.get('/projects/public')
         ]);
         setProfile(profileRes.data);
         setAbout(aboutRes.data);
@@ -45,9 +45,9 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-20">
       <Hero
-        name={profile?.name}
-        title={profile?.title}
-        bio={profile?.summary || profile?.bio}
+        name={profile?.fullName || "Dharanidharan K"}
+        title={profile?.title || "Full Stack Developer"}
+        bio={profile?.bio || "A passionate software developer."}
       />
 
       {/* Merged About Section */}
@@ -119,7 +119,7 @@ export default function Home() {
                       imageUrl={project.thumbnailUrl || project.imageUrl}
                       liveUrl={project.projectUrl}
                       githubUrl={project.githubUrl}
-                      tags={project.technologies?.split(',')}
+                      tags={project.techStack?.split(',')}
                       index={index}
                   />
               ))}
